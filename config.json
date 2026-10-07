@@ -1,0 +1,24 @@
+{
+  "name": "L0p4Map",
+  "version": "1.0.0",
+  "slug": "l0p4map",
+  "description": "Network monitoring & topology visualization (L0p4Map) — ARP discovery, nmap scan, real-time graph",
+  "url": "https://github.com/HaxL0p4/L0p4Map",
+  "arch": ["amd64"],
+  "boot": "manual",
+  "host_network": true,
+  "privileged": ["NET_ADMIN"],
+  "options": {
+    "target": "",
+    "interface": "",
+    "interval": 3600,
+    "output_format": "json"
+  },
+  "schema": {
+    "target": "str?",
+    "interface": "str?",
+    "interval": "int",
+    "output_format": "str?"
+  },
+  "map": ["addon:data"]
+}
