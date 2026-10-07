@@ -1,28 +1,24 @@
 name: "L0p4Map"
 version: "1.0.0"
 slug: l0p4map
-description: "Network monitoring & topology visualization (L0p4Map) — ARP discovery, nmap scan, real-time graph"
-url: "https://github.com/HaxL0p4/L0p4Map"
+description: "Network monitoring & topology visualization — ARP discovery, nmap scan, real-time graph"
 arch:
   - amd64
+url: "https://github.com/HaxL0p4/L0p4Map"
 boot: "manual"
 host_network: true
 privileged:
   - NET_ADMIN
+ingress: true
+ingress_port: 8099
+map:
+  - type: share
+    read_only: false
 options:
   target: ""
   interface: ""
   interval: 3600
-  output_format: "json"
-  dashboard_port: 8099
 schema:
   target: "str?"
   interface: "str?"
   interval: "int"
-  output_format: "str?"
-  dashboard_port: "int"
-map:
-  - type: share
-    read_only: false
-ports:
-  "8099/tcp": 8099
