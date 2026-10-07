@@ -12,8 +12,7 @@ privileged:
 ingress: true
 ingress_port: 8099
 map:
-  - type: share
-    read_only: false
+  - share:rw
 options:
   target: ""
   interface: ""

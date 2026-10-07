@@ -28,4 +28,9 @@ COPY server.py /opt/l0p4map/server.py
 COPY dashboard/ /opt/l0p4map/dashboard/
 RUN chmod +x /run.sh && chmod +x /opt/l0p4map/server.py
 
+LABEL \
+    io.hass.version="1.0.0" \
+    io.hass.type="app" \
+    io.hass.arch="amd64"
+
 ENTRYPOINT ["/run.sh"]
