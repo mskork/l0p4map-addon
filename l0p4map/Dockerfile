@@ -1,6 +1,5 @@
-FROM ghcr.io/home-assistant/amd64-addon-base:2025.01.0
+FROM ghcr.io/home-assistant/base:latest
 
-# System deps: nmap, scapy (libpcap), PyQt6 libs
 RUN apk add --no-cache \
     nmap \
     python3 \
@@ -9,6 +8,7 @@ RUN apk add --no-cache \
     libpcap \
     qt6-qtbase \
     qt6-qtwebengine \
+    tzdata \
     && pip3 install --break-system-packages --no-cache-dir \
     scapy \
     requests \
@@ -18,7 +18,6 @@ RUN apk add --no-cache \
 
 WORKDIR /opt/l0p4map
 
-# Clone L0p4Map source
 RUN git clone https://github.com/HaxL0p4/L0p4Map.git . \
     && chmod +x L0p4Map.sh \
     && python3 -c "from core.scanner import scan_network; print('scanner OK')"
@@ -32,5 +31,8 @@ LABEL \
     io.hass.version="1.0.0" \
     io.hass.type="app" \
     io.hass.arch="amd64"
+
+ENV DASHBOARD_PORT=8099
+ENV L0P4MAP_INTERVAL=3600
 
 ENTRYPOINT ["/run.sh"]
