@@ -7,11 +7,13 @@ cd /opt/l0p4map
 TARGET="${L0P4MAP_TARGET:-}"
 INTERFACE="${L0P4MAP_INTERFACE:-}"
 INTERVAL="${L0P4MAP_INTERVAL:-3600}"
+DASH_PORT="${L0P4MAP_DASHBOARD_PORT:-8099}"
 
-# Qt headless mode (PyQt6 imports may happen even in CLI mode)
+# Qt headless mode
 export QT_QPA_PLATFORM=offscreen
 export QTWEBENGINE_CHROMIUM_FLAGS="--no-sandbox --disable-gpu --disable-software-rasterizer"
 export QTWEBENGINE_DISABLE_SANDBOX=1
+export DASHBOARD_PORT="$DASH_PORT"
 
 # Auto-detect target from local subnet if not set
 if [ -z "$TARGET" ]; then
@@ -24,7 +26,13 @@ if [ -n "$INTERFACE" ]; then
     SCAN_ARGS="$SCAN_ARGS --interface $INTERFACE"
 fi
 
-echo "L0p4Map addon starting — target: $TARGET, interval: ${INTERVAL}s"
+echo "L0p4Map addon starting — target: $TARGET, interval: ${INTERVAL}s, dashboard: :$DASH_PORT"
+
+# Start dashboard server in background
+python3 /opt/l0p4map/server.py &
+
+# Ensure data dir
+mkdir -p /data
 
 while true; do
     echo "=== Scan started $(date) ==="

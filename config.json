@@ -12,13 +12,18 @@
     "target": "",
     "interface": "",
     "interval": 3600,
-    "output_format": "json"
+    "output_format": "json",
+    "dashboard_port": 8099
   },
   "schema": {
     "target": "str?",
     "interface": "str?",
     "interval": "int",
-    "output_format": "str?"
+    "output_format": "str?",
+    "dashboard_port": "int"
   },
-  "map": ["addon:data"]
+  "map": ["addon:data"],
+  "panel": true,
+  "url_path": "l0p4map",
+  "ports": {"8099/tcp": 8099}
 }

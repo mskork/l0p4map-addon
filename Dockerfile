@@ -24,6 +24,8 @@ RUN git clone https://github.com/HaxL0p4/L0p4Map.git . \
     && python3 -c "from core.scanner import scan_network; print('scanner OK')"
 
 COPY run.sh /run.sh
-RUN chmod +x /run.sh
+COPY server.py /opt/l0p4map/server.py
+COPY dashboard/ /opt/l0p4map/dashboard/
+RUN chmod +x /run.sh && chmod +x /opt/l0p4map/server.py
 
 ENTRYPOINT ["/run.sh"]

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L0p4Map — Sieć</title>
+<link rel="stylesheet" href="https://unpkg.com/vis-network@9.1.9/dist/vis-network.min.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:system-ui,sans-serif; background:#1a1a2e; color:#e0e0e0; height:100vh; display:flex; flex-direction:column; }
+header { background:#16213e; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #0f3460; }
+header h1 { font-size:18px; color:#e94560; }
+header .status { font-size:13px; color:#888; }
+#graph { flex:1; width:100%; border-bottom:1px solid #0f3460; min-height:300px; }
+#devices { overflow-y:auto; max-height:40vh; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { background:#0f3460; padding:8px; text-align:left; position:sticky; top:0; }
+td { padding:6px 8px; border-bottom:1px solid #1a1a2e; }
+tr:hover { background:#16213e; }
+.badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:bold; }
+.badge.gateway { background:#e94560; color:#fff; }
+.badge.router { background:#f5a623; color:#000; }
+.badge.switch { background:#2ed573; color:#000; }
+.badge.pc { background:#1e90ff; color:#fff; }
+.badge.mobile { background:#a55eea; color:#fff; }
+.badge.ap { background:#ff6b6b; color:#fff; }
+.badge.vm { background:#7bed9f; color:#000; }
+.badge.unknown { background:#555; color:#fff; }
+.btn { background:#e94560; color:#fff; border:none; padding:6px 16px; border-radius:4px; cursor:pointer; font-size:13px; }
+.btn:hover { background:#c0392b; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🌐 L0p4Map</h1>
+  <div>
+    <span class="status" id="lastScan">Brak skanu</span>
+    <button class="btn" onclick="runScan()">Skanuj</button>
+  </div>
+</header>
+<div id="graph"></div>
+<div id="devices">
+  <table>
+    <thead><tr><th>IP</th><th>MAC</th><th>Hostname</th><th>Vendor</th><th>Rola</th><th>OS</th><th>Pory</th></tr></thead>
+    <tbody id="hostsBody"></tbody>
+  </table>
+</div>
+<script src="https://unpkg.com/vis-network@9.1.9/dist/vis-network.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
