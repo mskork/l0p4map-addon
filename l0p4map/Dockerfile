@@ -1,20 +1,27 @@
-FROM ghcr.io/home-assistant/amd64-base:latest
+FROM debian:bookworm-slim
 
-RUN apk add --no-cache \
+# Install system dependencies (Debian-based for PyQt6 compatibility)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     nmap \
     python3 \
-    py3-pip \
+    python3-pip \
+    python3-pyqt6 \
+    python3-pyqt6.qtwebengine \
     git \
-    libpcap \
-    qt6-qtbase \
-    qt6-qtwebengine \
+    libpcap0.8 \
+    libpcap0.8-dev \
+    libgl1 \
+    libegl1 \
+    libxkbcommon0 \
+    libdbus-1-3 \
+    libfontconfig1 \
     tzdata \
-    && pip3 install --break-system-packages --no-cache-dir \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir --break-system-packages \
     scapy \
     requests \
-    psutil \
-    PyQt6 \
-    PyQt6-WebEngine
+    psutil
 
 WORKDIR /opt/l0p4map
 
@@ -29,7 +36,7 @@ RUN chmod +x /run.sh && chmod +x /opt/l0p4map/server.py
 
 LABEL \
     io.hass.version="1.0.0" \
-    io.hass.type="addon" \
+    io.hass.type="app" \
     io.hass.arch="amd64"
 
 ENV DASHBOARD_PORT=8099
