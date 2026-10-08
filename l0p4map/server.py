@@ -40,13 +40,26 @@ def run_scan():
 
 
 class Handler(http.server.BaseHTTPRequestHandler):
+    def _headers(self):
+        return {
+            'host': self.headers.get('host', ''),
+            'forwarded': self.headers.get('forwarded', ''),
+            'x-forwarded-for': self.headers.get('x-forwarded-for', ''),
+            'x-forwarded-proto': self.headers.get('x-forwarded-proto', 'http'),
+            'x-forwarded-host': self.headers.get('x-forwarded-host', ''),
+        }
+
     def do_GET(self):
-        if self.path == "/api/hosts":
+        h = self._headers()
+        path = self.path.split('?')[0]
+        if path == '/api/hosts':
             self.serve_hosts()
-        elif self.path == "/api/status":
+        elif path == '/api/status':
             self.serve_status()
+        elif path == '/health' or path == '/healthz':
+            self.send_json({'status': 'ok'})
         else:
-            self.serve_file(self.path)
+            self.serve_file(path)
 
     def do_POST(self):
         if self.path == "/api/scan":
@@ -99,6 +112,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(json.dumps(data).encode())
 
@@ -109,7 +123,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
 def main():
     os.makedirs(DATA_DIR, exist_ok=True)
     port = int(os.environ.get("DASHBOARD_PORT", "8099"))
-    server = http.server.HTTPServer(("0.0.0.0", port), Handler)
+    server = http.server.ThreadingHTTPServer(("0.0.0.0", port), Handler)
     print(f"Dashboard on :{port}")
     server.serve_forever()
 
