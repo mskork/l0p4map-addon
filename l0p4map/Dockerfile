@@ -1,4 +1,4 @@
-FROM ghcr.io/home-assistant/base:latest
+FROM ghcr.io/home-assistant/amd64-base:latest
 
 RUN apk add --no-cache \
     nmap \
@@ -29,7 +29,7 @@ RUN chmod +x /run.sh && chmod +x /opt/l0p4map/server.py
 
 LABEL \
     io.hass.version="1.0.0" \
-    io.hass.type="app" \
+    io.hass.type="addon" \
     io.hass.arch="amd64"
 
 ENV DASHBOARD_PORT=8099
