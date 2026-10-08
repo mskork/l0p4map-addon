@@ -5,6 +5,8 @@ description: "Network monitoring & topology visualization"
 arch:
   - amd64
 init: false
+ingress: true
+ingress_port: 8099
 map:
   - share:rw
 options:
