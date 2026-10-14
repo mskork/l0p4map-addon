@@ -1,11 +1,14 @@
-const API = '/api/hosts';
+const API = './api/hosts';
 let network = null;
 let nodes = null;
 let edges = null;
 
+// Auto-detect base path from current URL for ingress
+const BASE = window.location.pathname.replace(/\/$/, '');
+
 async function fetchHosts() {
   try {
-    const res = await fetch(API + '?t=' + Date.now());
+    const res = await fetch(`${BASE}/api/hosts?t=` + Date.now());
     if (!res.ok) return;
     const hosts = await res.json();
     renderGraph(hosts);
@@ -102,7 +105,7 @@ function renderTable(hosts) {
 
 async function runScan() {
   try {
-    await fetch('/api/scan', { method: 'POST' });
+    await fetch(`${BASE}/api/scan`, { method: 'POST' });
     setTimeout(fetchHosts, 2000);
   } catch(e) { alert('Skan nie uruchomiony'); }
 }

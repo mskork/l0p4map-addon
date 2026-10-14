@@ -50,23 +50,31 @@ class Handler(http.server.BaseHTTPRequestHandler):
         }
 
     def do_GET(self):
-        h = self._headers()
         path = self.path.split('?')[0]
-        if path == '/api/hosts':
+        # HA ingress may pass paths with prefix like /fb471bf5_l0p4map/api/hosts
+        if 'api/hosts' in path:
             self.serve_hosts()
-        elif path == '/api/status':
+        elif 'api/status' in path:
             self.serve_status()
-        elif path == '/health' or path == '/healthz':
+        elif 'api/scan' in path and self.command == 'POST':
+            self.do_scan()
+        elif path.endswith('/health') or path.endswith('/healthz'):
             self.send_json({'status': 'ok'})
         else:
-            self.serve_file(path)
+            # Strip ingress prefix and serve static file
+            clean_path = path.split('/')[-1] or 'index.html'
+            self.serve_file('/' + clean_path)
 
     def do_POST(self):
-        if self.path == "/api/scan":
-            threading.Thread(target=run_scan, daemon=True).start()
-            self.send_json({"status": "scan started"})
+        path = self.path.split('?')[0]
+        if 'api/scan' in path:
+            self.do_scan()
         else:
             self.send_json({"error": "unknown endpoint"}, 404)
+
+    def do_scan(self):
+        threading.Thread(target=run_scan, daemon=True).start()
+        self.send_json({"status": "scan started"})
 
     def serve_hosts(self):
         try:
