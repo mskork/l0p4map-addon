@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 cd /opt/l0p4map
 
