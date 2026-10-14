@@ -1,10 +1,14 @@
-const API = './api/hosts';
 let network = null;
 let nodes = null;
 let edges = null;
 
-// Auto-detect base path from current URL for ingress
-const BASE = window.location.pathname.replace(/\/$/, '');
+// Detect HA ingress hash from URL
+function getIngressBase() {
+  const m = window.location.pathname.match(/\/api\/hassio_ingress\/([^/]+)/);
+  return m ? `/api/hassio_ingress/${m[1]}` : '';
+}
+
+const BASE = getIngressBase();
 
 async function fetchHosts() {
   try {
@@ -55,7 +59,6 @@ function renderGraph(hosts) {
     });
   });
 
-  // Group hosts by subnet for edges
   const subnets = {};
   hosts.forEach(h => {
     const subnet = h.ip?.substring(0, h.ip?.lastIndexOf('.')) + '.0/24';
@@ -65,7 +68,6 @@ function renderGraph(hosts) {
 
   hosts.forEach(h => {
     if (h.role?.toLowerCase()?.includes('gateway')) {
-      // Connect gateway to other devices in same subnet
       const subnet = h.ip?.substring(0, h.ip?.lastIndexOf('.')) + '.0/24';
       (subnets[subnet] || []).forEach(other => {
         if (other !== h.ip) edges.add({ from: h.ip, to: other, color: { color: '#555' } });
@@ -73,7 +75,6 @@ function renderGraph(hosts) {
     }
   });
 
-  // Remove disconnected nodes from edges
   const nodeIds = new Set(hosts.map(h => h.ip));
   edges.removeIf(e => !nodeIds.has(e.from) || !nodeIds.has(e.to));
 
@@ -110,6 +111,5 @@ async function runScan() {
   } catch(e) { alert('Skan nie uruchomiony'); }
 }
 
-// Auto-refresh every 60s
 setInterval(fetchHosts, 60000);
 fetchHosts();
