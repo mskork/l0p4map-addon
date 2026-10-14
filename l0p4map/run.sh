@@ -29,7 +29,11 @@ fi
 echo "L0p4Map addon starting — target: $TARGET, interval: ${INTERVAL}s, dashboard: :$DASH_PORT"
 
 # Start dashboard server in background
-python3 /opt/l0p4map/server.py &
+echo "Starting dashboard server on port ${DASH_PORT}..."
+python3 /opt/l0p4map/server.py 2>&1 &
+SERVER_PID=$!
+sleep 2
+kill -0 $SERVER_PID 2>/dev/null && echo "Server running (PID $SERVER_PID)" || echo "Server failed to start"
 
 # Ensure data dir
 mkdir -p /data
